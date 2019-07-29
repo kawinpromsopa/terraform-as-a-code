@@ -40,7 +40,7 @@ Provisioning tools
 
 AWS Account
 
-* Permission to create of resource services to provistion
+* Permission to create of resource services to provision
 * AWS credentials and region exported
 
 
@@ -54,7 +54,7 @@ AWS Account
 Step 1). Clone repositry
 
 ```
-$ git clone https://github.com/EkoCommunications/EkoMessagingSDKDevOps.git
+$ git clone https://github.com/kawinpromsopa/terraform-as-a-code.git
 ```
 
 Step 2). Export aws credentials keys
