@@ -69,17 +69,21 @@ $ export AWS_SECRET_ACCESS_KEY==<YOUR_SECRET_ACCESS_KEY>
 
 ### Packer
 
-Step 3). Build private base image for provision servers, at path `./terraform-as-a-code/packer` wait utill created, and COPY AMI_ID to press the NEXT STEP!. 
+Step 3). Build private base image for provision servers, at path `./terraform-as-a-code/packer` wait utill created, and `COPY AMI_ID` to do something in the next step!.
 
 ```
 $ packer build ubuntu16_base_image.json
 ```
 
-Step 4). After received the AMI_ID from step 3, It should be press value to file `main.tf`, at path `./terraform-as-a-code/terraform/staging/main.tf` in line : 9 `app_image = "ami-xxxxxxx"`
+Step 4). After received the `AMI_ID`, Please enter value to file `main.tf`, at path `./terraform-as-a-code/terraform/staging/main.tf` in line : 9, For example:
+
+```
+app_image = "ami-xxxxxxx"
+```
 
 ### Terraform
 
-Step 5). Initail modules, at path `./terraform-as-a-code/terraform/staging/`
+Step 5). Initail terraform modules, at path `./terraform-as-a-code/terraform/staging/`
 
 ```
 $ terraform init
@@ -96,6 +100,8 @@ Step 7). Waiting utill terraform created and send output file of `ALB_DNS_NAME` 
 ```
 $ more output-name-of-aws-alb.text
 ```
+
+Step 8). Copy the dns_name of result output, Enter in your web browser, and enjoy!
 
 ## Stages Environment
 
