@@ -23,7 +23,7 @@ The results will be create:
     - Policies
 
 
-### Requirements
+## Requirements
 
 Dependencies
 
@@ -44,12 +44,12 @@ AWS Account
 * AWS credentials and region exported
 
 
-### Building application
+## Building application
 
 * Fork https://github.com/ThoughtWorksInc/infra-problem
   - I'm also have already builded docker containers to pushed on docker registry with my account.
 
-### Deployment.
+## Deployment.
 
 Step 1). Clone repositry
 
@@ -67,7 +67,7 @@ $ export AWS_SECRET_ACCESS_KEY==<YOUR_SECRET_ACCESS_KEY>
 
 * Ref : https://docs.aws.amazon.com/amazonswf/latest/awsrbflowguide/set-up-creds.html
 
-##### Packer
+### Packer
 
 Step 3). Build private base image for provision servers, at path `./terraform-as-a-code/packer` wait utill created, and COPY AMI_ID to press the NEXT STEP!. 
 
@@ -77,7 +77,7 @@ $ packer build ubuntu16_base_image.json
 
 Step 4). After received the AMI_ID from step 3, It should be press value to file `main.tf`, at path `./terraform-as-a-code/terraform/staging/main.tf` in line : 9 `app_image = "ami-xxxxxxx"`
 
-##### Terraform
+### Terraform
 
 Step 5). Initail modules, at path `./terraform-as-a-code/terraform/staging/`
 
@@ -97,9 +97,8 @@ Step 7). Waiting utill terraform created and send output file of `ALB_DNS_NAME` 
 $ more output-name-of-aws-alb.text
 ```
 
-### Stages Environment
+## Stages Environment
 
-I have designed to separate stages environment values with Directory : `Production`, `Staging`
+* I have designed to separate stages environment values with Directory : `Production`, `Staging`
 
-
-### Deveploping application designe for CI/CD
+## Deveploping application designe for CI/CD
