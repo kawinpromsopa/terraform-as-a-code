@@ -1,0 +1,59 @@
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - python-pip
+  become: yes
+
+- name: add docker apt key
+  shell: "curl -sSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  args:
+    warn: no
+  changed_when: false
+
+- name: add docker repository
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_lsb['codename'] }} stable"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: install docker-ce
+  apt:
+    name: docker-ce=17.12.1~ce-0~ubuntu
+    state: present
+  become: yes
+
+- name: add user "{{ ansible_user_id }}" to docker group
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes
+  register: add_user_to_group
+  become: yes
+
+- name: kill open ssh sessions
+  shell: "ps -ef | grep sshd | grep `whoami` | awk '{print \"kill -9\", $2}' | sh"
+  when: add_user_to_group is changed
+  failed_when: false
+  ignore_errors: true
+
+- name: download docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+  become: yes
+
+- name: install docker pip package
+  pip:
+    name: "{{ item }}"
+    executable: pip2
+  with_items:
+    - docker
+    - docker-compose
+  become: yes

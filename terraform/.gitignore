@@ -1,0 +1,10 @@
+.terraform
+.terraform.*
+terraform.*
+errored.tfstate*
+*.retry
+*.tfplan
+*.tfstate
+*.tfstate.backup
+*.backup
+*.hide

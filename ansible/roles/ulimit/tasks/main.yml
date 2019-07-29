@@ -1,0 +1,18 @@
+- name: increase fs.file-max
+  become: True
+  sysctl:
+    name: fs.file-max
+    value: 65536
+    state: present
+  failed_when: False
+
+- name: ulimit rules
+  become: True
+  lineinfile:
+    dest: /etc/security/limits.conf
+    line: "{{ item }}"
+  with_items:
+    - "* soft nofile 65536"
+    - "* hard nofile 65536"
+    - "* soft nproc 32768"
+    - "* hard nproc 32768"

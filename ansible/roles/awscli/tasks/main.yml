@@ -1,0 +1,23 @@
+- name: install pip
+  apt:
+    name: python-pip
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: install awscli
+  pip:
+    name: awscli
+    executable: pip2
+  become: yes
+
+- name: create .aws dir
+  file:
+    path: "{{ ansible_env.HOME }}/.aws"
+    state: directory
+
+- name: copy aws cli config
+  template:
+    src: config.j2
+    dest: "{{ ansible_env.HOME }}/.aws/config"
+    mode: 0600

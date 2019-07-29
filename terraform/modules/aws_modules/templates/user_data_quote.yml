@@ -1,0 +1,175 @@
+#cloud-config #swapfile setup
+hostname: ${name}
+manage_etc_hosts: localhost
+swap:
+  filename: /swapfile
+  size: "auto"
+  maxsize: 4000000000
+runcmd:
+  - [ chown, "ubuntu:ubuntu", /home/ubuntu/quote ]
+  - [ systemctl, enable, quote ]
+  - [ systemctl, start, quote ]
+write_files:
+  - path: /home/ubuntu/.aws/config
+    owner: ubuntu:ubuntu
+    permissions: '0600'
+    content: |
+      [default]
+      region = ${region}
+  - path: /home/ubuntu/composeup
+    owner: ubuntu:ubuntu
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      set -xe
+      docker-compose -f /home/ubuntu/quote/docker-compose.yml up -d
+  - path: /etc/systemd/system/quote.service
+    content: |
+      [Unit]
+      Description=quote
+      After=docker.service
+      Requires=docker.service
+
+      [Service]
+      User=ubuntu
+      WorkingDirectory=/home/ubuntu/quote
+      Type=oneshot
+      ExecStart=/home/ubuntu/composeup
+      ExecStop=/usr/local/bin/docker-compose stop
+      RemainAfterExit=true
+      StandardOutput=journal
+
+      [Install]
+      WantedBy=multi-user.target
+  - path: /home/ubuntu/quote/docker-compose.yml
+    owner: ubuntu:ubuntu
+    content: |
+      version: '3'
+      services:
+        quote:
+          restart: always
+          image: kawinpromsopa/clojure:${quote_version}
+          ports:
+            - 3001:3001
+          command:
+            - sh
+            - -c
+            - cd build && java -jar quotes.jar
+          environment:
+            - APP_PORT=3001
+          restart: unless-stopped
+          logging:
+            options:
+              max-size: 10m
+              max-file: '10'
+  - path: /etc/nginx/sites-enabled/default
+    content: |
+      upstream quote {
+        server localhost:3001;
+      }
+      server {
+        listen 80 default_server;
+        server_name _;
+
+        # if ($http_x_forwarded_proto = 'http') {
+        #   return 301 https://$host$request_uri;
+        # }
+
+        client_max_body_size 1G;
+        keepalive_timeout 15;
+
+        location / {
+          proxy_pass_request_headers on;
+          proxy_pass http://quote;
+        }
+      }
+      server {
+        listen 80;
+
+        server_name _;
+
+        # if ($http_x_forwarded_proto = 'http') {
+        #   return 301 https://$host$request_uri;
+        # }
+
+        location / {
+          proxy_pass http://quote;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_read_timeout 86400;
+          proxy_buffer_size   128k;
+          proxy_buffers   4 256k;
+          proxy_busy_buffers_size   256k;
+        }
+      }
+  - path: /etc/nginx/nginx.conf
+    content: |
+      user www-data;
+      worker_processes auto;
+      pid /run/nginx.pid;
+      worker_rlimit_nofile 50000;
+
+      events {
+        worker_connections 40000;
+        # multi_accept on;
+      }
+
+      http {
+        set_real_ip_from  ${vpc_cidr};
+        real_ip_header    X-Forwarded-For;
+        real_ip_recursive on;
+        log_format upstreaminfo '$remote_addr - $http_host [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
+
+        ##
+        # Basic Settings
+        ##
+
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        # server_tokens off;
+
+        # server_names_hash_bucket_size 64;
+        # server_name_in_redirect off;
+
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        ##
+        # SSL Settings
+        ##
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+        ssl_prefer_server_ciphers on;
+
+        ##
+        # Logging Settings
+        ##
+
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+
+        ##
+        # Gzip Settings
+        ##
+
+        gzip on;
+        gzip_disable "msie6";
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        ##
+        # Virtual Host Configs
+        ##
+
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+      }

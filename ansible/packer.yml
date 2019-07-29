@@ -1,0 +1,7 @@
+- hosts: base_image 
+  roles:
+    - base_ami
+    - ulimit
+    - awscli
+    - docker
+    - nginx

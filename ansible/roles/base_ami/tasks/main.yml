@@ -1,0 +1,18 @@
+- apt:
+    upgrade: yes
+    update_cache: yes
+  become: yes
+  when: apt_upgrade
+
+- apt:
+    name: "{{ item }}"
+  with_items:
+    - ntp
+    - vim
+    - htop
+    - atop
+    - jq
+    - git
+    - byobu
+    - mlocate
+  become: yes
