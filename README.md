@@ -124,4 +124,4 @@ $ terraform destroy
 
 ## Developing application design for CI/CD
 
-With continuous integration and continuous deployment I using Jenkins written pipeline as a code workflow: Build, Push images to registry, Deployment by separate stages `environment values` and `configuration of resource systems`, and also these Architecture infrastructure supported blue/green deployment.
+With continuous integration and continuous deployment I using Jenkins written pipeline as a code workflow: `Build`, `Push images to registry`, `Deployment stages` by separate `environment values` and `configuration of resource systems` with terraform workspace or directory enivonment, like deployed example this. And also these architecture infrastructure supported blue/green deployment
