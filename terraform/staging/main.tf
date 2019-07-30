@@ -6,7 +6,7 @@ module "terraform-as-a-code" {
   vpc_cidr                  = "10.1.0.0/16"
   region                    = "ap-southeast-1"
   key_name                  = ""
-  app_image                 = ""
+  app_image                 = "ami-07277ef8776588029"
   frontend_instance_type    = "t3.nano"
   quote_instance_type       = "t3.nano"
   newsfeed_instance_type    = "t3.nano"

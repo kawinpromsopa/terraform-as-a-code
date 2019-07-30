@@ -48,6 +48,10 @@ AWS Account
 * Fork https://github.com/ThoughtWorksInc/infra-problem
   - I'm also have already builded docker containers and pushed on Docker hub registry.
 
+## Stages Environment
+
+* I have designed to separate stages environment values with Directory : `Production`, `Staging`
+
 ## Deployment.
 
 Step 1). Clone repositry.
@@ -83,30 +87,39 @@ app_image = "ami-xxxxxxx"
 
 ### Terraform
 
-Step 5). Initail terraform modules, at path `./terraform-as-a-code/terraform/staging/`
+Step 5). Initial terraform modules, at path `./terraform-as-a-code/terraform/staging/`
 
 ```
 $ terraform init
 ```
+![Screen Shot 2562-07-30 at 15 54 34](https://user-images.githubusercontent.com/44109187/62115300-6c400a00-b2e2-11e9-8e8a-02000f0adf82.png)
 
 Step 6). Run `terraform appy` and then resource will be create 41 resources and enter `yes` to comfirm to deployment following command:
-
+* Note: Processing deployment take time around 5 mins.
 ```
 $ terraform apply
 ```
-
 ![terraform apply](https://user-images.githubusercontent.com/44109187/62114650-4fef9d80-b2e1-11e9-8018-4654572ef661.png)
 
-Step 7). Waiting utill terraform created and send output file to `output-name-of-aws-alb.text`, Then show the result in file.
+Step 7). Wait until terraform created and send output value in `output-name-of-aws-alb.text` file, Then show the result in file with:
 
 ```
 $ more output-name-of-aws-alb.text
 ```
+![Screen Shot 2562-07-30 at 16 06 24](https://user-images.githubusercontent.com/44109187/62116646-b4f8c280-b2e4-11e9-93f6-f7d14605bcea.png)
+
 
 Step 8). Copy the DNS_NAME value in file, Enter in your web browser, and enjoy!
 
-## Stages Environment
+<img width="1680" alt="Screen Shot 2562-07-30 at 16 06 59" src="https://user-images.githubusercontent.com/44109187/62116700-d063cd80-b2e4-11e9-9f8b-b2462dea5a54.png">
 
-* I have designed to separate stages environment values with Directory : `Production`, `Staging`
+Step 9). Run `terraform destroy` to delete everything created by terraform, enter `yes` to comfirm to destroy following command:
 
-## Deveploping application designe for CI/CD
+```
+$ terraform destroy
+```
+![Screen Shot 2562-07-30 at 16 08 20](https://user-images.githubusercontent.com/44109187/62116881-2769a280-b2e5-11e9-99f1-7661f8b76158.png)
+
+## Developing application design for CI/CD
+
+With continuous integration and continuous deployment I using Jenkins written pipeline as a code workflow: Build, Push images to registry, Deployment by separate stages `environment values` and `configuration of resource systems`, and also these Architecture infrastructure supported blue/green deployment.
