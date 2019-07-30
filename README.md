@@ -2,7 +2,7 @@
 
 Provisioning infrastructure microservices application on Amazon Web Services by terraform!.
 
-[terraform-as-a-code.pdf](https://github.com/kawinpromsopa/terraform-as-a-code/files/3446130/terraform-as-a-code.pdf)
+![Screen Shot 2562-07-30 at 16 33 15](https://user-images.githubusercontent.com/44109187/62118517-fccd1900-b2e7-11e9-9aa7-95698564cdc8.png)
 
 The results will be create:
 
