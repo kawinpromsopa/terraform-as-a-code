@@ -2,6 +2,8 @@
 
 Provisioning infrastructure microservices application on Amazon Web Services by terraform!.
 
+[terraform-as-a-code.pdf](https://github.com/kawinpromsopa/terraform-as-a-code/files/3446107/terraform-as-a-code.pdf)
+
 The results will be create:
 
 * Network
