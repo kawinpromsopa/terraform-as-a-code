@@ -79,13 +79,13 @@ Step 3). Build private base image for provision servers, at path `./terraform-as
 ```
 $ packer build ubuntu16_base_image.json
 ```
+![ami_id](https://user-images.githubusercontent.com/44109187/62114311-9c86a900-b2e0-11e9-9e79-fe85c22ed5e4.png)
 
 Step 4). After received the `AMI_ID`, Please enter value to file `main.tf`, at path `./terraform-as-a-code/terraform/staging/main.tf` in line : 9, For example:
 
 ```
 app_image = "ami-xxxxxxx"
 ```
-![ami_id](https://user-images.githubusercontent.com/44109187/62114311-9c86a900-b2e0-11e9-9e79-fe85c22ed5e4.png)
 
 ### Terraform
 
